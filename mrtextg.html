@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>Tripweb Tools</title>
+<link rel="icon" type="image/png" href="https://tripweb.page.gd/library/weblogo.png"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<style>
+html{font-size:16px}
+*{-webkit-text-size-adjust:100%;text-size-adjust:100%;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:#1e1e1e;color:#fff;margin:0;padding:0}
+header{background:#2a2a2a;border-bottom:1px solid #3d3d3d;color:#ffcc00;text-align:center;font-weight:600;padding:18px 0;position:sticky;top:0;z-index:1000;font-size:1.3rem}
+.container{max-width:720px;margin:30px auto;padding:0 15px;display:grid;gap:20px;grid-template-columns:1fr;}
+.app{background:#2a2a2a;border:1px solid #3d3d3d;border-radius:12px;padding:16px;font-size:.9rem;position:relative;overflow:hidden}
+.app:hover{border-color:#ffcc00}
+label{display:block;margin-bottom:6px;color:#ffcc00;font-weight:600;font-size:.85rem}
+input{width:100%;padding:8px;border-radius:6px;border:1px solid #3d3d3d;background:#1e1e1e;color:#fff;margin-bottom:12px;font-size:.9rem}
+button{background:#ffcc00;color:#111;border:none;border-radius:6px;padding:8px 18px;font-size:.9rem;font-weight:600;cursor:pointer;transition:background .2s, transform .1s}
+button:hover{background:#ffd93d}
+button:active{transform:scale(.96)}
+.result{margin-top:14px;background:#111;border:1px solid #333;padding:10px 14px;border-radius:8px;word-wrap:break-word;font-size:.95rem;letter-spacing:.5px}
+.fade{animation:fadeIn .5s ease}
+@keyframes fadeIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+</style>
+</head>
+
+<body>
+
+<header>Tripweb Tools</header>
+
+<div class="container">
+  <div class="app">
+    <h2 style="margin:0 0 10px;color:#ffcc00;font-size:1.2rem;">Random Text Generator</h2>
+    <div class="app-desc">example: 16 or 1-9(or more) or 0 if you don't want to use it</div>
+   <label>ㅤ</label>
+   
+    <label>Lowercase (abcdefghijklmnopqrstuvwxyz)</label>
+    <input type="text" id="lowercase" placeholder="amount...">
+
+    <label>Uppercase (ABCDEFGHIJKLMNOPQRSTUVWXYZ)</label>
+    <input type="text" id="uppercase" placeholder="amount...">
+
+    <label>Space ( (space))</label>
+    <input type="text" id="space" placeholder="amount...">
+
+    <label>Symbol (#_&-+()/:;~`|•√π÷×§∆\\}{=°^¥€¢£%©®™✓[]<>)</label>
+    <input type="text" id="symbol" placeholder="amount...">
+
+    <label>Sign (.,?!*'\\\")</label>
+    <input type="text" id="sign" placeholder="amount...">
+
+    <label>Number (0123456789)</label>
+    <input type="text" id="number" placeholder="amount...">
+
+    <button onclick="generate()">Generate</button>
+
+    <div id="result" class="result"></div>
+  </div>
+</div>
+
+<script>
+function parseRange(val){
+  if(!val) return 0;
+  if(val.includes('-')){
+    let [min, max] = val.split('-').map(Number);
+    if(isNaN(min)||isNaN(max)) return 0;
+    return Math.floor(Math.random()*(max-min+1))+min;
+  } else {
+    return parseInt(val)||0;
+  }
+}
+
+function getRandomChars(source, count){
+  let result = '';
+  for(let i=0; i<count; i++){
+    result += source[Math.floor(Math.random()*source.length)];
+  }
+  return result;
+}
+
+function generate(){
+  const sets = {
+    lowercase: "abcdefghijklmnopqrstuvwxyz",
+    uppercase: "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+    space: " ",
+    symbol: "#_&-+()/:;~`|•√π÷×§∆\\}{=°^¥€¢£%©®™✓[]<>",
+    sign: ".,?!*'\\\"",
+    number: "0123456789"
+  };
+
+  const counts = {
+    lowercase: parseRange(document.getElementById("lowercase").value.trim()),
+    uppercase: parseRange(document.getElementById("uppercase").value.trim()),
+    space: parseRange(document.getElementById("space").value.trim()),
+    symbol: parseRange(document.getElementById("symbol").value.trim()),
+    sign: parseRange(document.getElementById("sign").value.trim()),
+    number: parseRange(document.getElementById("number").value.trim())
+  };
+
+  let output = '';
+  for(let key in counts){
+    if(counts[key]>0){
+      output += getRandomChars(sets[key], counts[key]);
+    }
+  }
+
+  // Acak urutan semua karakter
+  output = output.split('').sort(() => Math.random() - 0.5).join('');
+
+  const resultBox = document.getElementById("result");
+  resultBox.textContent = output || "(empty result)";
+  resultBox.classList.remove("fade");
+  void resultBox.offsetWidth;
+  resultBox.classList.add("fade");
+}
+</script>
+
+</body>
+</html>

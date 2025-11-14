@@ -1,0 +1,166 @@
+<!DOCTYPE html>    
+<html lang="en">    
+<head>    
+<meta charset="UTF-8"/>    
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">    
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">    
+<meta http-equiv="Pragma" content="no-cache">    
+<meta http-equiv="Expires" content="0">    
+<title>Tripweb Tools</title>    
+<link rel="icon" type="image/png" href="https://tripweb.page.gd/library/weblogo.png"/>    
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">    
+<style>    
+html{font-size:16px}    
+*{-webkit-text-size-adjust:100%;text-size-adjust:100%;box-sizing:border-box}    
+body{font-family:'Inter',sans-serif;background:#1e1e1e;color:#fff;margin:0;padding:0}    
+header{background:#2a2a2a;border-bottom:1px solid #3d3d3d;color:#ffcc00;text-align:center;font-weight:600;padding:18px 0;position:sticky;top:0;z-index:1000;font-size:1.3rem}    
+.container{max-width:720px;margin:30px auto;padding:0 15px;display:grid;gap:20px;grid-template-columns:1fr;}    
+.app{background:#2a2a2a;border:1px solid #3d3d3d;border-radius:12px;padding:16px;font-size:.9rem}    
+.app-header{display:flex;justify-content:space-between;align-items:flex-start}    
+.app-title{font-size:1.1rem;font-weight:600;color:#fff}    
+.app-desc{font-size:.8rem;color:#bbb;margin:6px 0;line-height:1.4}    
+
+.num-input {    
+  width:130px;    
+  border-radius:8px;    
+  border:1px solid #3d3d3d;    
+  background:#131313;    
+  color:#fff;    
+  padding:8px 10px;    
+  font-size:.95rem;    
+  outline:none;    
+}    
+
+.resultlink {    
+  width:100%;    
+  border-radius:8px;    
+  border:1px solid #3d3d3d;    
+  background:#131313;    
+  color:#ffcc00;    
+  padding:10px;    
+  font-size:.95rem;    
+  word-break:break-all;    
+  min-height:44px;    
+  display:flex;align-items:center;justify-content:center;    
+}    
+.controls {display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}    
+.btn {background:#ffcc00;color:#111;border:none;padding:8px 14px;border-radius:8px;font-weight:600;cursor:pointer}    
+.btn:active{transform:scale(.97)}    
+.note {color:#ffcc00;margin-top:8px;font-size:.85rem}    
+.error {color:#ff6b6b;margin-top:8px;font-size:.85rem}    
+</style>    
+</head>    
+<body>    
+    
+<header>Tripweb Tools</header>    
+    
+<div class="container">    
+  <div class="app">    
+    
+    <div class="app-header">    
+      <div class="app-title">Random Number Generator</div>    
+    </div>    
+    
+    <div class="app-desc">Generate random numbers between the minimum and maximum values (inclusive).</div>    
+    
+    <div style="margin-top:8px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">    
+      <div>    
+        <div class="app-desc" style="margin:0 0 6px 0;color:#ffcc00;font-size:.8rem">min</div>    
+        <input id="minInput" class="num-input" type="number" placeholder="min">    
+      </div>    
+    
+      <div>    
+        <div class="app-desc" style="margin:0 0 6px 0;color:#ffcc00;font-size:.8rem">max</div>    
+        <input id="maxInput" class="num-input" type="number" placeholder="max">    
+      </div>    
+    </div>    
+    
+    <div class="app-desc" style="margin-top:12px;color:#bbb">The results will appear below after pressing Generate.</div>    
+    
+    <div style="margin-top:12px">    
+      <div id="result" class="resultlink">-</div>    
+      <div id="message" class="error" style="display:none"></div>    
+    </div>    
+    
+    <div class="controls">    
+      <button class="btn" id="generateBtn">Generate</button>    
+      <button class="btn" id="copyBtn">Copy Results</button>    
+    </div>    
+    
+    <div class="note">min must be less than max. The result is in the range [min - max].</div>    
+    
+  </div>    
+</div>    
+    
+<script>    
+const minInput = document.getElementById('minInput');    
+const maxInput = document.getElementById('maxInput');    
+const generateBtn = document.getElementById('generateBtn');    
+const copyBtn = document.getElementById('copyBtn');    
+const resultBox = document.getElementById('result');    
+const message = document.getElementById('message');    
+
+function showError(txt){    
+  message.style.display = 'block';    
+  message.textContent = txt;    
+}    
+function clearError(){    
+  message.style.display = 'none';    
+  message.textContent = '';    
+}    
+
+function generateRandomInt(min, max){    
+  // pastikan integer dan inklusif    
+  min = Math.ceil(min);    
+  max = Math.floor(max);    
+  return Math.floor(Math.random() * (max - min + 1)) + min;    
+}    
+
+generateBtn.addEventListener('click', ()=>{    
+  clearError();    
+  const minVal = Number(minInput.value);    
+  const maxVal = Number(maxInput.value);    
+
+  if (minInput.value === '' || maxInput.value === ''){    
+    showError('Isi kedua input min dan max.');    
+    resultBox.textContent = '-';    
+    return;    
+  }    
+  if (!Number.isFinite(minVal) || !Number.isFinite(maxVal)){    
+    showError('Input harus berupa angka valid.');    
+    resultBox.textContent = '-';    
+    return;    
+  }    
+  if (minVal >= maxVal){    
+    showError('min harus lebih kecil dari max');    
+    resultBox.textContent = '-';    
+    return;    
+  }    
+
+  const rand = generateRandomInt(minVal, maxVal);    
+  resultBox.textContent = rand;    
+});    
+
+copyBtn.addEventListener('click', async ()=>{    
+  const txt = resultBox.textContent;    
+  if (!txt || txt === '-') return;    
+  try{    
+    await navigator.clipboard.writeText(txt);    
+    copyBtn.textContent = 'Copied';    
+    setTimeout(()=> copyBtn.textContent = 'Copy Hasil', 900);    
+  }catch(e){    
+    // fallback    
+    const r = document.createRange();    
+    r.selectNode(resultBox);    
+    window.getSelection().removeAllRanges();    
+    window.getSelection().addRange(r);    
+    document.execCommand('copy');    
+    window.getSelection().removeAllRanges();    
+    copyBtn.textContent = 'Copied';    
+    setTimeout(()=> copyBtn.textContent = 'Copy Hasil', 900);    
+  }    
+});    
+</script>    
+    
+</body>    
+</html>
